@@ -11,7 +11,7 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
 
-namespace RevitWPFTemplate
+namespace CreateSuperstructureBlocks
 {
     public class RevitModelForfard
     {

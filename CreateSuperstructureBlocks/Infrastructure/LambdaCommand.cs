@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RevitWPFTemplate.Infrastructure.Base;
+using CreateSuperstructureBlocks.Infrastructure.Base;
 
-namespace RevitWPFTemplate.Infrastructure
+namespace CreateSuperstructureBlocks.Infrastructure
 {
     internal class LambdaCommand : Command
     {

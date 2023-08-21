@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RevitWPFTemplate
+namespace CreateSuperstructureBlocks
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

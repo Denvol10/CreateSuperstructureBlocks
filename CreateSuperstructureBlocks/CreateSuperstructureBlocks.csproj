@@ -7,8 +7,8 @@
     <ProjectGuid>{BBBEF323-BD38-4257-AF1A-43281EDC9F8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RevitWPFTemplate</RootNamespace>
-    <AssemblyName>RevitWPFTemplate</AssemblyName>
+    <RootNamespace>CreateSuperstructureBlocks</RootNamespace>
+    <AssemblyName>CreateSuperstructureBlocks</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
