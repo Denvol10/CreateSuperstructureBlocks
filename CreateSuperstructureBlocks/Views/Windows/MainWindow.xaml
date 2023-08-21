@@ -68,6 +68,31 @@
         </Style>
     </Window.Resources>
     <StackPanel>
-        
+        <GroupBox Header="Оси блоков"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2">
+                <UniformGrid Rows="2">
+                    <TextBlock Text="Линии блоков"
+                               Style="{StaticResource TextAboveButton}" />
+                    <Button Style="{StaticResource SelectButton}"
+                            Command="{Binding GetBeamAxisBySelectionCommand}" />
+                </UniformGrid>
+                <TextBox Text="{Binding BeamAxisIds}"
+                         Style="{StaticResource SelectedItemsBox}" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Ось трассы"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2">
+                <UniformGrid Rows="2">
+                    <TextBlock Text="Линии оси трассы"
+                               Style="{StaticResource TextAboveButton}" />
+                    <Button Style="{StaticResource SelectButton}"
+                            Command="{Binding GetRoadAxisCommand}" />
+                </UniformGrid>
+                <TextBox Text="{Binding RoadAxisElemIds, Mode=OneWay}"
+                         Style="{StaticResource SelectedItemsBox}" />
+            </UniformGrid>
+        </GroupBox>
     </StackPanel>
 </Window>

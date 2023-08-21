@@ -26,7 +26,6 @@ namespace CreateSuperstructureBlocks.ViewModels
         }
 
         #region Заголовок
-
         private string _title = "Создать блоки пролетного строения";
 
         public string Title
@@ -34,17 +33,65 @@ namespace CreateSuperstructureBlocks.ViewModels
             get => _title;
             set => Set(ref _title, value);
         }
-
         #endregion
 
+        #region Id линий блоков
+        private string _beamAxisIds;
 
+        public string BeamAxisIds
+        {
+            get => _beamAxisIds;
+            set => Set(ref _beamAxisIds, value);
+        }
+        #endregion
+
+        #region Элементы оси трассы
+        private string _roadAxisElemIds;
+
+        public string RoadAxisElemIds
+        {
+            get => _roadAxisElemIds;
+            set => Set(ref _roadAxisElemIds, value);
+        }
+        #endregion
 
         #region Команды
 
+        #region Получение линий блоков
+        public ICommand GetBeamAxisBySelectionCommand { get; }
 
+        private void OnGetBeamAxisBySelectionCommandExecuted(object parameter)
+        {
+            RevitCommand.mainView.Hide();
+            RevitModel.GetBeamAxisBySelection();
+            BeamAxisIds = RevitModel.BeamAxisIds;
+            RevitCommand.mainView.ShowDialog();
+        }
 
+        private bool CanGetBeamAxisBySelectionCommandExecute(object parameter)
+        {
+            return true;
+        }
         #endregion
 
+        #region Получение оси трассы
+        public ICommand GetRoadAxisCommand { get; }
+
+        private void OnGetRoadAxisCommandExecuted(object parameter)
+        {
+            RevitCommand.mainView.Hide();
+            RevitModel.GetPolyCurve();
+            RoadAxisElemIds = RevitModel.RoadAxisElemIds;
+            RevitCommand.mainView.ShowDialog();
+        }
+
+        private bool CanGetRoadAxisCommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+        #endregion
 
         #region Конструктор класса MainWindowViewModel
         public MainWindowViewModel(RevitModelForfard revitModel)
@@ -52,7 +99,8 @@ namespace CreateSuperstructureBlocks.ViewModels
             RevitModel = revitModel;
 
             #region Команды
-
+            GetBeamAxisBySelectionCommand = new LambdaCommand(OnGetBeamAxisBySelectionCommandExecuted, CanGetBeamAxisBySelectionCommandExecute);
+            GetRoadAxisCommand = new LambdaCommand(OnGetRoadAxisCommandExecuted, CanGetRoadAxisCommandExecute);
             #endregion
         }
 
