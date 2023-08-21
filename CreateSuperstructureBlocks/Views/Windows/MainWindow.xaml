@@ -8,38 +8,66 @@
         mc:Ignorable="d"
         Title="{Binding Title}"
         Height="450"
-        Width="800">
-    <Window.InputBindings>
-        <KeyBinding Modifiers="Ctrl"
-                    Key="P"
-                    Command="{Binding GetRoomsCommand}" />
-    </Window.InputBindings>
+        Width="350"
+        Background="#f0f0f0"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0"
-                 x:Name="AllRoomsView"
-                 HorizontalAlignment="Stretch"
-                 VerticalAlignment="Stretch"
-                 ItemsSource="{Binding Rooms}" />
-        <GridSplitter Grid.Column="1"
-                      ShowsPreview="False"
-                      Width="3" 
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Stretch"/>
-        <StackPanel Grid.Column="2">
-            <Button Content="Получить комнаты"
-                    Width="120"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    Margin="10,10,0,0"
-                    Command="{Binding GetRoomsCommand}"/>
-        </StackPanel>
-    </Grid>
+    <Window.Resources>
+        <Style x:Key="TextAboveButton"
+               TargetType="TextBlock">
+            <Setter Property="Height"
+                    Value="15" />
+            <Setter Property="TextAlignment"
+                    Value="Center" />
+        </Style>
+        <Style x:Key="SelectButton"
+               TargetType="Button">
+            <Setter Property="Width"
+                    Value="100" />
+            <Setter Property="Height"
+                    Value="22" />
+            <Setter Property="Content"
+                    Value="Выбрать" />
+            <Setter Property="Background"
+                    Value="#fdfdfd" />
+            <Setter Property="Margin"
+                    Value="0,2,0,0" />
+            <Setter Property="VerticalAlignment"
+                    Value="Bottom" />
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius"
+                            Value="4" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style x:Key="SelectedItemsBox"
+               TargetType="TextBox">
+            <Setter Property="IsReadOnly"
+                    Value="True" />
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="Width"
+                    Value="155" />
+            <Setter Property="Height"
+                    Value="45" />
+            <Setter Property="VerticalAlignment"
+                    Value="Bottom" />
+        </Style>
+        <Style x:Key="BorderGroupStyle"
+               TargetType="GroupBox">
+            <Setter Property="BorderBrush"
+                    Value="#818181" />
+            <Setter Property="BorderThickness"
+                    Value="0.5" />
+            <Setter Property="Margin"
+                    Value="2,0,3,0" />
+        </Style>
+    </Window.Resources>
+    <StackPanel>
+        
+    </StackPanel>
 </Window>

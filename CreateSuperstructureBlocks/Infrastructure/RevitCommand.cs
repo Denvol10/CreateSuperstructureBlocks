@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
-using Autodesk.Revit.DB.Architecture;
 using CreateSuperstructureBlocks.ViewModels;
 
 namespace CreateSuperstructureBlocks.Infrastructure
@@ -17,6 +11,8 @@ namespace CreateSuperstructureBlocks.Infrastructure
     [Regeneration(RegenerationOption.Manual)]
     internal class RevitCommand : IExternalCommand
     {
+        public static MainWindow mainView = null;
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
@@ -26,8 +22,8 @@ namespace CreateSuperstructureBlocks.Infrastructure
 
             try
             {
-                MainWindowViewModel mainWindowViewModel = new MainWindowViewModel();
-                mainWindowViewModel.RevitModel = new RevitModelForfard(uiapp);
+                var RevitModel = new RevitModelForfard(uiapp);
+                MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(RevitModel);
 
                 System.Diagnostics.Process proc = System.Diagnostics.Process.GetCurrentProcess();
 
@@ -38,10 +34,9 @@ namespace CreateSuperstructureBlocks.Infrastructure
 
                     view.DataContext = mainWindowViewModel;
 
-                    if (view.ShowDialog() != true)
-                    {
-                        return Result.Cancelled;
-                    }
+                    mainView = view;
+
+                    view.ShowDialog();
                 }
 
                 return Result.Succeeded;
