@@ -113,6 +113,14 @@ namespace CreateSuperstructureBlocks
         }
         #endregion
 
+        #region Получение линии на поверхности 1 из Settings
+        public void GetRoadLines1BySettings(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+            RoadLines1 = RevitGeometryUtils.GetCurvesById(Doc, elemIds).OfType<Line>().ToList();
+        }
+        #endregion
+
         #region Линия на поверхности 2
         public List<Line> RoadLines2 { get; set; }
 
@@ -122,6 +130,14 @@ namespace CreateSuperstructureBlocks
             get => _roadLineElemIds2;
             set => _roadLineElemIds2 = value;
         }
+
+        #region Получение линии на поверхности 2 из Settings
+        public void GetRoadLines2BySettings(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+            RoadLines2 = RevitGeometryUtils.GetCurvesById(Doc, elemIds).OfType<Line>().ToList();
+        }
+        #endregion
 
         public void GetRoadLine2()
         {

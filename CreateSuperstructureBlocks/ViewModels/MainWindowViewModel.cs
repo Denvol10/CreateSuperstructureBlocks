@@ -181,6 +181,8 @@ namespace CreateSuperstructureBlocks.ViewModels
         {
             Properties.Settings.Default.BeamAxisIds = BeamAxisIds;
             Properties.Settings.Default.RoadAxisElemIds = RoadAxisElemIds;
+            Properties.Settings.Default.RoadLineElemIds1 = RoadLineElemIds1;
+            Properties.Settings.Default.RoadLineElemIds2 = RoadLineElemIds2;
             Properties.Settings.Default.Save();
         }
 
@@ -211,6 +213,30 @@ namespace CreateSuperstructureBlocks.ViewModels
                 {
                     RoadAxisElemIds = roadAxisIdsInSettings;
                     RevitModel.GetAxisBySettings(roadAxisIdsInSettings);
+                }
+            }
+            #endregion
+
+            #region Инициализация значения элементам линии на поверхности 1
+            if(!(Properties.Settings.Default.RoadLineElemIds1 is null))
+            {
+                string line1IdsInSettings = Properties.Settings.Default.RoadLineElemIds1;
+                if (RevitModel.IsLinesExistInModel(line1IdsInSettings) && !string.IsNullOrEmpty(line1IdsInSettings))
+                {
+                    RoadLineElemIds1 = line1IdsInSettings;
+                    RevitModel.GetRoadLines1BySettings(line1IdsInSettings);
+                }
+            }
+            #endregion
+
+            #region Инициализация значения элементам линии на поверхности 2
+            if(!(Properties.Settings.Default.RoadLineElemIds2 is null))
+            {
+                string line2IdsInSettings = Properties.Settings.Default.RoadLineElemIds2;
+                if(RevitModel.IsLinesExistInModel(line2IdsInSettings) && !string.IsNullOrEmpty(line2IdsInSettings))
+                {
+                    RoadLineElemIds2 = line2IdsInSettings;
+                    RevitModel.GetRoadLines2BySettings(line2IdsInSettings);
                 }
             }
             #endregion
