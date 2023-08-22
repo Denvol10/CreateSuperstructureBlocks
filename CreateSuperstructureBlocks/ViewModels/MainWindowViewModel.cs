@@ -151,6 +151,7 @@ namespace CreateSuperstructureBlocks.ViewModels
         private void OnCreateProjectPointsCommandExecuted(object parameter)
         {
             RevitModel.CreateProjectPoints();
+            SaveSettings();
         }
 
         private bool CanCreateProjectPointsCommandExecute(object parameter)
@@ -164,7 +165,7 @@ namespace CreateSuperstructureBlocks.ViewModels
 
         private void OnCloseWindowCommandExecuted(object parameter)
         {
-            //SaveSettings();
+            SaveSettings();
             RevitCommand.mainView.Close();
         }
 
@@ -176,10 +177,33 @@ namespace CreateSuperstructureBlocks.ViewModels
 
         #endregion
 
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.BeamAxisIds = BeamAxisIds;
+            Properties.Settings.Default.Save();
+        }
+
         #region Конструктор класса MainWindowViewModel
         public MainWindowViewModel(RevitModelForfard revitModel)
         {
             RevitModel = revitModel;
+
+            #region Инициализация свойств из Settings
+
+            #region Инициализация значения осей блоков
+            if (!(Properties.Settings.Default.BeamAxisIds is null))
+            {
+                string beamAxisIdsInSettings = Properties.Settings.Default.BeamAxisIds;
+                if(RevitModel.IsBeamAxisExistInModel(beamAxisIdsInSettings) && !string.IsNullOrEmpty(beamAxisIdsInSettings))
+                {
+                    BeamAxisIds = beamAxisIdsInSettings;
+                    RevitModel.GetBeamAxisBySettings(beamAxisIdsInSettings);
+                }
+            }
+            #endregion
+
+            #endregion
+
 
             #region Команды
             GetBeamAxisBySelectionCommand = new LambdaCommand(OnGetBeamAxisBySelectionCommandExecuted, CanGetBeamAxisBySelectionCommandExecute);

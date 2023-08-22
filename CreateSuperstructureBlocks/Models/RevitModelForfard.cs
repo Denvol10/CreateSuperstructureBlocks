@@ -45,6 +45,23 @@ namespace CreateSuperstructureBlocks
         }
         #endregion
 
+        #region Проверка на то существуют линии осей блоков в моделе
+        public bool IsBeamAxisExistInModel(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+
+            return RevitGeometryUtils.IsElemsExistInModel(Doc, elemIds, typeof(ModelLine));
+        }
+        #endregion
+
+        #region Получение линий осей блоков в плане
+        public void GetBeamAxisBySettings(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+            BeamAxis = RevitGeometryUtils.GetBeamAxisById(Doc, elemIds);
+        }
+        #endregion
+
         #region Ось трассы
         public PolyCurve RoadAxis { get; set; }
 
