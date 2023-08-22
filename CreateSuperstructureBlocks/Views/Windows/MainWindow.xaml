@@ -130,13 +130,26 @@
                 </Grid.RowDefinitions>
                 <UniformGrid Columns="2"
                              Grid.Row="0">
-                    <UniformGrid Rows="3">
+                    <UniformGrid Rows="3"
+                                 Height="80">
                         <TextBlock Text="Семейство блока"
+                                   VerticalAlignment="Center"
                                    Style="{StaticResource TextAboveButton}" />
                         <ComboBox Width="150"
-                                  Margin="0,2,0,0"
+                                  Height="22"
+                                  VerticalAlignment="Center"
                                   ItemsSource="{Binding GenericModelFamilySymbols}"
                                   SelectedItem="{Binding FamilySymbolName}" />
+                        <DockPanel VerticalAlignment="Center">
+                            <TextBlock Text="Высота блока, м"
+                                       Style="{StaticResource TextAboveButton}"
+                                       Margin="5,0,0,0" />
+                            <TextBox Width="50"
+                                     Height="20"
+                                     HorizontalAlignment="Right"
+                                     Margin="0,0,4,0"
+                                     TextAlignment="Center" />
+                        </DockPanel>
                     </UniformGrid>
                     <UniformGrid Rows="3">
                         <CheckBox Content="Направление блока"
@@ -156,7 +169,6 @@
                                   IsChecked="{Binding IsVertical}" />
                     </UniformGrid>
                 </UniformGrid>
-
             </Grid>
         </GroupBox>
         <GroupBox Header="Создание"
