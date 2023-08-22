@@ -62,6 +62,38 @@ namespace CreateSuperstructureBlocks
         }
         #endregion
 
+        #region Линия на поверхности 1
+        public List<Line> RoadLines1 { get; set; }
+
+        private string _roadLineElemIds1;
+        public string RoadLineElemIds1
+        {
+            get => _roadLineElemIds1;
+            set => _roadLineElemIds1 = value;
+        }
+
+        public void GetRoadLine1()
+        {
+            RoadLines1 = RevitGeometryUtils.GetRoadLines(Uiapp, out _roadLineElemIds1);
+        }
+        #endregion
+
+        #region Линия на поверхности 2
+        public List<Line> RoadLines2 { get; set; }
+
+        private string _roadLineElemIds2;
+        public string RoadLineElemIds2
+        {
+            get => _roadLineElemIds2;
+            set => _roadLineElemIds2 = value;
+        }
+
+        public void GetRoadLine2()
+        {
+            RoadLines2 = RevitGeometryUtils.GetRoadLines(Uiapp, out _roadLineElemIds2);
+        }
+        #endregion
+
         #region Тест проекция точек на ось
         public void CreateProjectPoints()
         {

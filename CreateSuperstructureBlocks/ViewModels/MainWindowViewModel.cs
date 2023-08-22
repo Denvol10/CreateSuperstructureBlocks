@@ -55,6 +55,26 @@ namespace CreateSuperstructureBlocks.ViewModels
         }
         #endregion
 
+        #region Элементы линии на поверхности 1
+        private string _roadLineElemIds1;
+
+        public string RoadLineElemIds1
+        {
+            get => _roadLineElemIds1;
+            set => Set(ref _roadLineElemIds1, value);
+        }
+        #endregion
+
+        #region Элементы линии на поверхности 2
+        private string _roadLineElemIds2;
+
+        public string RoadLineElemIds2
+        {
+            get => _roadLineElemIds2;
+            set => Set(ref _roadLineElemIds2, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение линий блоков
@@ -86,6 +106,40 @@ namespace CreateSuperstructureBlocks.ViewModels
         }
 
         private bool CanGetRoadAxisCommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+        #region Получение линии на поверхности дороги 1
+        public ICommand GetRoadLines1Command { get; }
+
+        private void OnGetRoadLines1CommandExecuted(object parameter)
+        {
+            RevitCommand.mainView.Hide();
+            RevitModel.GetRoadLine1();
+            RoadLineElemIds1 = RevitModel.RoadLineElemIds1;
+            RevitCommand.mainView.ShowDialog();
+        }
+
+        private bool CanGetRoadLines1CommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+        #region Получение линии на поверхности дороги 2
+        public ICommand GetRoadLines2Command { get; }
+
+        private void OnGetRoadLines2CommandExecuted(object parameter)
+        {
+            RevitCommand.mainView.Hide();
+            RevitModel.GetRoadLine2();
+            RoadLineElemIds2 = RevitModel.RoadLineElemIds2;
+            RevitCommand.mainView.ShowDialog();
+        }
+
+        private bool CanGetRoadLines2CommandExecute(object parameter)
         {
             return true;
         }
@@ -131,6 +185,8 @@ namespace CreateSuperstructureBlocks.ViewModels
             GetBeamAxisBySelectionCommand = new LambdaCommand(OnGetBeamAxisBySelectionCommandExecuted, CanGetBeamAxisBySelectionCommandExecute);
             GetRoadAxisCommand = new LambdaCommand(OnGetRoadAxisCommandExecuted, CanGetRoadAxisCommandExecute);
             CreateProjectPointsCommand = new LambdaCommand(OnCreateProjectPointsCommandExecuted, CanCreateProjectPointsCommandExecute);
+            GetRoadLines1Command = new LambdaCommand(OnGetRoadLines1CommandExecuted, CanGetRoadLines1CommandExecute);
+            GetRoadLines2Command = new LambdaCommand(OnGetRoadLines2CommandExecuted, CanGetRoadLines2CommandExecute);
             CloseWindowCommand = new LambdaCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);
             #endregion
         }

@@ -103,7 +103,7 @@
                                    Style="{StaticResource TextAboveButton}"
                                    VerticalAlignment="Bottom" />
                         <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetRoadLines1}" />
+                                Command="{Binding GetRoadLines1Command}" />
                     </UniformGrid>
                     <TextBox Text="{Binding RoadLineElemIds1}"
                              Style="{StaticResource SelectedItemsBox}" />
@@ -114,7 +114,7 @@
                         <TextBlock Text="Линии на поверхности 2"
                                    Style="{StaticResource TextAboveButton}" />
                         <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetRoadLines2}" />
+                                Command="{Binding GetRoadLines2Command}" />
                     </UniformGrid>
                     <TextBox Text="{Binding RoadLineElemIds2}"
                              Style="{StaticResource SelectedItemsBox}" />

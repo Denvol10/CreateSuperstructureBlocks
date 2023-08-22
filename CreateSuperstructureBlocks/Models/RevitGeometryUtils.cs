@@ -36,6 +36,20 @@ namespace CreateSuperstructureBlocks.Models
             return lines;
         }
 
+        // Метод получения списка линий на поверхности дороги
+        public static List<Line> GetRoadLines(UIApplication uiapp, out string elementIds)
+        {
+            Selection sel = uiapp.ActiveUIDocument.Selection;
+            var selectedOnRoadSurface = sel.PickObjects(ObjectType.Element, "Select Road Lines");
+            var directShapesRoadSurface = selectedOnRoadSurface.Select(r => uiapp.ActiveUIDocument.Document.GetElement(r))
+                                                               .OfType<DirectShape>();
+            elementIds = ElementIdToString(directShapesRoadSurface);
+            var curvesRoadSurface = GetCurvesByDirectShapes(directShapesRoadSurface);
+            var linesRoadSurface = curvesRoadSurface.OfType<Line>().ToList();
+
+            return linesRoadSurface;
+        }
+
         // Метод получения строки с ElementId
         private static string ElementIdToString(IEnumerable<Element> elements)
         {
