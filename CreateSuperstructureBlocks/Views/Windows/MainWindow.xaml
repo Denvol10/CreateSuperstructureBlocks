@@ -96,80 +96,97 @@
         </GroupBox>
         <GroupBox Header="Верх покрытия"
                   Style="{StaticResource BorderGroupStyle}">
-            <UniformGrid Rows="2">
-                <UniformGrid Columns="2">
-                    <UniformGrid Rows="2">
-                        <TextBlock Text="Линии на поверхности 1"
-                                   Style="{StaticResource TextAboveButton}"
-                                   VerticalAlignment="Bottom" />
-                        <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetRoadLines1Command}" />
+            <StackPanel>
+                <UniformGrid Rows="2">
+                    <UniformGrid Columns="2">
+                        <UniformGrid Rows="2">
+                            <TextBlock Text="Линии на поверхности 1"
+                                       Style="{StaticResource TextAboveButton}"
+                                       VerticalAlignment="Bottom" />
+                            <Button Style="{StaticResource SelectButton}"
+                                    Command="{Binding GetRoadLines1Command}" />
+                        </UniformGrid>
+                        <TextBox Text="{Binding RoadLineElemIds1}"
+                                 Style="{StaticResource SelectedItemsBox}" />
                     </UniformGrid>
-                    <TextBox Text="{Binding RoadLineElemIds1}"
-                             Style="{StaticResource SelectedItemsBox}" />
-                </UniformGrid>
-                <UniformGrid Columns="2"
-                             Margin="0,5">
-                    <UniformGrid Rows="2">
-                        <TextBlock Text="Линии на поверхности 2"
-                                   Style="{StaticResource TextAboveButton}" />
-                        <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetRoadLines2Command}" />
+                    <UniformGrid Columns="2"
+                                 Margin="0,5">
+                        <UniformGrid Rows="2">
+                            <TextBlock Text="Линии на поверхности 2"
+                                       Style="{StaticResource TextAboveButton}" />
+                            <Button Style="{StaticResource SelectButton}"
+                                    Command="{Binding GetRoadLines2Command}" />
+                        </UniformGrid>
+                        <TextBox Text="{Binding RoadLineElemIds2}"
+                                 Style="{StaticResource SelectedItemsBox}" />
                     </UniformGrid>
-                    <TextBox Text="{Binding RoadLineElemIds2}"
-                             Style="{StaticResource SelectedItemsBox}" />
                 </UniformGrid>
-            </UniformGrid>
+                <DockPanel>
+                    <TextBlock Text="Толщина покрытия, мм"
+                               Style="{StaticResource TextAboveButton}"
+                               Margin="15,0,0,0" />
+                    <TextBox Height="20"
+                             Width="50"
+                             HorizontalAlignment="Right"
+                             TextAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,107,0" />
+                </DockPanel>
+                <DockPanel Margin="0,4,0,0">
+                    <TextBlock Text="Толщина плиты, мм"
+                               Style="{StaticResource TextAboveButton}"
+                               Margin="15,0,0,0" />
+                    <TextBox Height="20"
+                             Width="50"
+                             HorizontalAlignment="Right"
+                             TextAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,107,0" />
+                </DockPanel>
+            </StackPanel>
         </GroupBox>
         <GroupBox Header="Блок пролетного строения"
                   Style="{StaticResource BorderGroupStyle}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <UniformGrid Columns="2"
-                             Grid.Row="0">
-                    <UniformGrid Rows="3"
-                                 Height="80">
-                        <TextBlock Text="Семейство блока"
-                                   VerticalAlignment="Center"
-                                   Style="{StaticResource TextAboveButton}" />
-                        <ComboBox Width="150"
-                                  Height="22"
-                                  VerticalAlignment="Center"
-                                  ItemsSource="{Binding GenericModelFamilySymbols}"
-                                  SelectedItem="{Binding FamilySymbolName}" />
-                        <DockPanel VerticalAlignment="Center">
-                            <TextBlock Text="Высота блока, м"
-                                       Style="{StaticResource TextAboveButton}"
-                                       Margin="5,0,0,0" />
-                            <TextBox Width="50"
-                                     Height="20"
-                                     HorizontalAlignment="Right"
-                                     Margin="0,0,4,0"
-                                     TextAlignment="Center" />
-                        </DockPanel>
-                    </UniformGrid>
-                    <UniformGrid Rows="3">
-                        <CheckBox Content="Направление блока"
-                                  VerticalAlignment="Center"
-                                  HorizontalAlignment="Left"
-                                  Margin="10,5,0,0"
-                                  IsChecked="{Binding IsRotate}" />
-                        <CheckBox Content="Отзеркалить"
-                                  VerticalAlignment="Center"
-                                  HorizontalAlignment="Left"
-                                  Margin="10,5,0,0"
-                                  IsChecked="{Binding IsVertical}" />
-                        <CheckBox Content="Обратить"
-                                  VerticalAlignment="Center"
-                                  HorizontalAlignment="Left"
-                                  Margin="10,5,0,0"
-                                  IsChecked="{Binding IsVertical}" />
-                    </UniformGrid>
+            <UniformGrid Columns="2">
+                <UniformGrid Rows="3"
+                             Height="80">
+                    <TextBlock Text="Семейство блока"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource TextAboveButton}" />
+                    <ComboBox Width="150"
+                              Height="22"
+                              VerticalAlignment="Center"
+                              ItemsSource="{Binding GenericModelFamilySymbols}"
+                              SelectedItem="{Binding FamilySymbolName}" />
+                    <DockPanel VerticalAlignment="Center">
+                        <TextBlock Text="Высота блока, мм"
+                                   Style="{StaticResource TextAboveButton}"
+                                   Margin="5,0,0,0" />
+                        <TextBox Width="50"
+                                 Height="20"
+                                 HorizontalAlignment="Right"
+                                 Margin="0,0,4,0"
+                                 TextAlignment="Center" />
+                    </DockPanel>
                 </UniformGrid>
-            </Grid>
+                <UniformGrid Rows="3">
+                    <CheckBox Content="Направление блока"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              Margin="10,5,0,0"
+                              IsChecked="{Binding IsRotate}" />
+                    <CheckBox Content="Отзеркалить"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              Margin="10,5,0,0"
+                              IsChecked="{Binding IsVertical}" />
+                    <CheckBox Content="Обратить"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              Margin="10,5,0,0"
+                              IsChecked="{Binding IsVertical}" />
+                </UniformGrid>
+            </UniformGrid>
         </GroupBox>
         <GroupBox Header="Создание"
                   Style="{StaticResource BorderGroupStyle}">
