@@ -58,6 +58,8 @@
     <Compile Include="Infrastructure\Base\Command.cs" />
     <Compile Include="Infrastructure\LambdaCommand.cs" />
     <Compile Include="Infrastructure\RevitCommand.cs" />
+    <Compile Include="Models\FamilySymbolSelector.cs" />
+    <Compile Include="Models\Filters\DirectShapeClassFilter.cs" />
     <Compile Include="Models\Filters\ModelLineClassFilter.cs" />
     <Compile Include="Models\PolyCurve.cs" />
     <Compile Include="Models\RevitGeometryUtils.cs" />

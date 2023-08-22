@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:CreateSuperstructureBlocks"
         mc:Ignorable="d"
         Title="{Binding Title}"
-        Height="450"
+        Height="550"
         Width="350"
         Background="#f0f0f0"
         WindowStartupLocation="CenterScreen"
@@ -120,6 +120,44 @@
                              Style="{StaticResource SelectedItemsBox}" />
                 </UniformGrid>
             </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Блок пролетного строения"
+                  Style="{StaticResource BorderGroupStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <UniformGrid Columns="2"
+                             Grid.Row="0">
+                    <UniformGrid Rows="3">
+                        <TextBlock Text="Семейство блока"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <ComboBox Width="150"
+                                  Margin="0,2,0,0"
+                                  ItemsSource="{Binding GenericModelFamilySymbols}"
+                                  SelectedItem="{Binding FamilySymbolName}" />
+                    </UniformGrid>
+                    <UniformGrid Rows="3">
+                        <CheckBox Content="Направление блока"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Margin="10,5,0,0"
+                                  IsChecked="{Binding IsRotate}" />
+                        <CheckBox Content="Отзеркалить"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Margin="10,5,0,0"
+                                  IsChecked="{Binding IsVertical}" />
+                        <CheckBox Content="Обратить"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Margin="10,5,0,0"
+                                  IsChecked="{Binding IsVertical}" />
+                    </UniformGrid>
+                </UniformGrid>
+
+            </Grid>
         </GroupBox>
         <GroupBox Header="Создание"
                   Style="{StaticResource BorderGroupStyle}">

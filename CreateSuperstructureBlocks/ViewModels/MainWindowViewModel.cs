@@ -12,6 +12,7 @@ using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CreateSuperstructureBlocks.Infrastructure;
+using CreateSuperstructureBlocks.Models;
 
 namespace CreateSuperstructureBlocks.ViewModels
 {
@@ -73,6 +74,28 @@ namespace CreateSuperstructureBlocks.ViewModels
             get => _roadLineElemIds2;
             set => Set(ref _roadLineElemIds2, value);
         }
+        #endregion
+
+        #region Список семейств и их типоразмеров
+        private ObservableCollection<FamilySymbolSelector> _genericModelFamilySymbols = new ObservableCollection<FamilySymbolSelector>();
+        public ObservableCollection<FamilySymbolSelector> GenericModelFamilySymbols
+        {
+            get => _genericModelFamilySymbols;
+            set => Set(ref _genericModelFamilySymbols, value);
+        }
+        #endregion
+
+        #region Выбранный типоразмер семейства
+        private FamilySymbolSelector _familySymbolName;
+        public FamilySymbolSelector FamilySymbolName
+        {
+            get => _familySymbolName;
+            set => Set(ref _familySymbolName, value);
+        }
+        #endregion
+
+        #region Индекс выбранного семейства
+        private int _familySymbolIndex = Properties.Settings.Default.FamilySymbolIndex;
         #endregion
 
         #region Команды
@@ -183,6 +206,7 @@ namespace CreateSuperstructureBlocks.ViewModels
             Properties.Settings.Default.RoadAxisElemIds = RoadAxisElemIds;
             Properties.Settings.Default.RoadLineElemIds1 = RoadLineElemIds1;
             Properties.Settings.Default.RoadLineElemIds2 = RoadLineElemIds2;
+            Properties.Settings.Default.FamilySymbolIndex = GenericModelFamilySymbols.IndexOf(FamilySymbolName);
             Properties.Settings.Default.Save();
         }
 
@@ -190,6 +214,8 @@ namespace CreateSuperstructureBlocks.ViewModels
         public MainWindowViewModel(RevitModelForfard revitModel)
         {
             RevitModel = revitModel;
+
+            GenericModelFamilySymbols = RevitModel.GetFamilySymbolNames();
 
             #region Инициализация свойств из Settings
 
@@ -238,6 +264,13 @@ namespace CreateSuperstructureBlocks.ViewModels
                     RoadLineElemIds2 = line2IdsInSettings;
                     RevitModel.GetRoadLines2BySettings(line2IdsInSettings);
                 }
+            }
+            #endregion
+
+            #region Инициализация значения типоразмера семейства
+            if (_familySymbolIndex >= 0 && _familySymbolIndex <= GenericModelFamilySymbols.Count - 1)
+            {
+                FamilySymbolName = GenericModelFamilySymbols.ElementAt(_familySymbolIndex);
             }
             #endregion
 

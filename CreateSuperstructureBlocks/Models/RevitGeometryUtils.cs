@@ -15,7 +15,7 @@ namespace CreateSuperstructureBlocks.Models
         public static List<Curve> GetCurvesByRectangle(UIApplication uiapp, out string elementIds)
         {
             Selection sel = uiapp.ActiveUIDocument.Selection;
-            var selectedElements = sel.PickElementsByRectangle("Select Road Axis");
+            var selectedElements = sel.PickElementsByRectangle(new DirectShapeClassFilter(), "Select Road Axis");
             var directshapeRoadAxis = selectedElements.OfType<DirectShape>();
             elementIds = ElementIdToString(directshapeRoadAxis);
             var curvesRoadAxis = GetCurvesByDirectShapes(directshapeRoadAxis);
@@ -40,7 +40,7 @@ namespace CreateSuperstructureBlocks.Models
         public static List<Line> GetRoadLines(UIApplication uiapp, out string elementIds)
         {
             Selection sel = uiapp.ActiveUIDocument.Selection;
-            var selectedOnRoadSurface = sel.PickObjects(ObjectType.Element, "Select Road Lines");
+            var selectedOnRoadSurface = sel.PickObjects(ObjectType.Element,new DirectShapeClassFilter() , "Select Road Lines");
             var directShapesRoadSurface = selectedOnRoadSurface.Select(r => uiapp.ActiveUIDocument.Document.GetElement(r))
                                                                .OfType<DirectShape>();
             elementIds = ElementIdToString(directShapesRoadSurface);
