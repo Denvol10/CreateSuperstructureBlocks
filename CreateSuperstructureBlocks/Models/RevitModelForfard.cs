@@ -170,7 +170,8 @@ namespace CreateSuperstructureBlocks
         #region Тест проекция точек на ось
         public void CreateProjectPoints()
         {
-            var points = BeamAxis.Select(l => l.GetEndPoint(0));
+            var points = BeamAxis.Select(l => l.GetEndPoint(0)).ToList();
+            points.AddRange(BeamAxis.Select(l => l.GetEndPoint(1)));
             var projectPoints = new List<XYZ>();
 
             foreach(var point in points)
