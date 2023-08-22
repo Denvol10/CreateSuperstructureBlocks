@@ -34,5 +34,17 @@ namespace CreateSuperstructureBlocks.Properties {
                 this["BeamAxisIds"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RoadAxisElemIds {
+            get {
+                return ((string)(this["RoadAxisElemIds"]));
+            }
+            set {
+                this["RoadAxisElemIds"] = value;
+            }
+        }
     }
 }

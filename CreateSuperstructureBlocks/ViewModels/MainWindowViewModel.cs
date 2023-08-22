@@ -180,6 +180,7 @@ namespace CreateSuperstructureBlocks.ViewModels
         private void SaveSettings()
         {
             Properties.Settings.Default.BeamAxisIds = BeamAxisIds;
+            Properties.Settings.Default.RoadAxisElemIds = RoadAxisElemIds;
             Properties.Settings.Default.Save();
         }
 
@@ -198,6 +199,18 @@ namespace CreateSuperstructureBlocks.ViewModels
                 {
                     BeamAxisIds = beamAxisIdsInSettings;
                     RevitModel.GetBeamAxisBySettings(beamAxisIdsInSettings);
+                }
+            }
+            #endregion
+
+            #region Инициализация значения оси трассы
+            if(!(Properties.Settings.Default.RoadAxisElemIds is null))
+            {
+                string roadAxisIdsInSettings = Properties.Settings.Default.RoadAxisElemIds;
+                if(RevitModel.IsLinesExistInModel(roadAxisIdsInSettings) && !string.IsNullOrEmpty(roadAxisIdsInSettings))
+                {
+                    RoadAxisElemIds = roadAxisIdsInSettings;
+                    RevitModel.GetAxisBySettings(roadAxisIdsInSettings);
                 }
             }
             #endregion

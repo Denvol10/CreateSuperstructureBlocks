@@ -103,6 +103,22 @@ namespace CreateSuperstructureBlocks.Models
             return true;
         }
 
+        // Получение линий по их id
+        public static List<Curve> GetCurvesById(Document doc, IEnumerable<int> ids)
+        {
+            var directShapeLines = new List<DirectShape>();
+            foreach (var id in ids)
+            {
+                ElementId elemId = new ElementId(id);
+                DirectShape line = doc.GetElement(elemId) as DirectShape;
+                directShapeLines.Add(line);
+            }
+
+            var lines = GetCurvesByDirectShapes(directShapeLines).OfType<Curve>().ToList();
+
+            return lines;
+        }
+
         // Метод получения строки с ElementId
         private static string ElementIdToString(IEnumerable<Element> elements)
         {

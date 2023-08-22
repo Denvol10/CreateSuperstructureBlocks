@@ -79,6 +79,24 @@ namespace CreateSuperstructureBlocks
         }
         #endregion
 
+        #region Проверка на то существуют линии оси и линии на поверхности в модели
+        public bool IsLinesExistInModel(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+
+            return RevitGeometryUtils.IsElemsExistInModel(Doc, elemIds, typeof(DirectShape));
+        }
+        #endregion
+
+        #region Получение оси трассы из Settings
+        public void GetAxisBySettings(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+            var lines = RevitGeometryUtils.GetCurvesById(Doc, elemIds);
+            RoadAxis = new PolyCurve(lines);
+        }
+        #endregion
+
         #region Линия на поверхности 1
         public List<Line> RoadLines1 { get; set; }
 
