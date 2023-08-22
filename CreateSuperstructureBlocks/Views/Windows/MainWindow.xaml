@@ -94,5 +94,44 @@
                          Style="{StaticResource SelectedItemsBox}" />
             </UniformGrid>
         </GroupBox>
+        <GroupBox Header="Верх покрытия"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Rows="2">
+                <UniformGrid Columns="2">
+                    <UniformGrid Rows="2">
+                        <TextBlock Text="Линии на поверхности 1"
+                                   Style="{StaticResource TextAboveButton}"
+                                   VerticalAlignment="Bottom" />
+                        <Button Style="{StaticResource SelectButton}"
+                                Command="{Binding GetRoadLines1}" />
+                    </UniformGrid>
+                    <TextBox Text="{Binding RoadLineElemIds1}"
+                             Style="{StaticResource SelectedItemsBox}" />
+                </UniformGrid>
+                <UniformGrid Columns="2"
+                             Margin="0,5">
+                    <UniformGrid Rows="2">
+                        <TextBlock Text="Линии на поверхности 2"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <Button Style="{StaticResource SelectButton}"
+                                Command="{Binding GetRoadLines2}" />
+                    </UniformGrid>
+                    <TextBox Text="{Binding RoadLineElemIds2}"
+                             Style="{StaticResource SelectedItemsBox}" />
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Создание"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2"
+                         Margin="0,12,0,5">
+                <Button Content="Создать"
+                        Style="{StaticResource SelectButton}"
+                        Command="{Binding CreateProjectPointsCommand}" />
+                <Button Content="Отмена"
+                        Style="{StaticResource SelectButton}"
+                        Command="{Binding CloseWindowCommand}" />
+            </UniformGrid>
+        </GroupBox>
     </StackPanel>
 </Window>

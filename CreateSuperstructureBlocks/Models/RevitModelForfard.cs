@@ -62,5 +62,36 @@ namespace CreateSuperstructureBlocks
         }
         #endregion
 
+        #region Тест проекция точек на ось
+        public void CreateProjectPoints()
+        {
+            var points = BeamAxis.Select(l => l.GetEndPoint(0));
+            var projectPoints = new List<XYZ>();
+
+            foreach(var point in points)
+            {
+                var projectPoint = RoadAxis.GetProjectPoint(point);
+                if(!(projectPoint is null))
+                {
+                    projectPoints.Add(projectPoint);
+                }
+            }
+
+            using(Transaction trans = new Transaction(Doc, "Created Project Points"))
+            {
+                trans.Start();
+                foreach(XYZ point in projectPoints)
+                {
+                    var referencePoint = Doc.FamilyCreate.NewReferencePoint(point);
+                }
+                foreach (XYZ point in points)
+                {
+                    var referencePoint = Doc.FamilyCreate.NewReferencePoint(point);
+                }
+                trans.Commit();
+            }
+        }
+        #endregion
+
     }
 }

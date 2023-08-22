@@ -198,6 +198,7 @@ namespace CreateSuperstructureBlocks.Models
                 if(interResult.Distance < minDistanse)
                 {
                     projectPoint = interResult.XYZPoint;
+                    minDistanse = interResult.Distance;
                 }
             }
 

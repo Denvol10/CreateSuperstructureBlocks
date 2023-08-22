@@ -91,6 +91,35 @@ namespace CreateSuperstructureBlocks.ViewModels
         }
         #endregion
 
+        #region Тест проецирование точек на ось
+        public ICommand CreateProjectPointsCommand { get; }
+
+        private void OnCreateProjectPointsCommandExecuted(object parameter)
+        {
+            RevitModel.CreateProjectPoints();
+        }
+
+        private bool CanCreateProjectPointsCommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+        #region Закрыть окно
+        public ICommand CloseWindowCommand { get; }
+
+        private void OnCloseWindowCommandExecuted(object parameter)
+        {
+            //SaveSettings();
+            RevitCommand.mainView.Close();
+        }
+
+        private bool CanCloseWindowCommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
         #endregion
 
         #region Конструктор класса MainWindowViewModel
@@ -101,6 +130,8 @@ namespace CreateSuperstructureBlocks.ViewModels
             #region Команды
             GetBeamAxisBySelectionCommand = new LambdaCommand(OnGetBeamAxisBySelectionCommandExecuted, CanGetBeamAxisBySelectionCommandExecute);
             GetRoadAxisCommand = new LambdaCommand(OnGetRoadAxisCommandExecuted, CanGetRoadAxisCommandExecute);
+            CreateProjectPointsCommand = new LambdaCommand(OnCreateProjectPointsCommandExecuted, CanCreateProjectPointsCommandExecute);
+            CloseWindowCommand = new LambdaCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);
             #endregion
         }
 
