@@ -98,6 +98,15 @@ namespace CreateSuperstructureBlocks.ViewModels
         private int _familySymbolIndex = Properties.Settings.Default.FamilySymbolIndex;
         #endregion
 
+        #region Развернут ли блок
+        private bool _isReversed = Properties.Settings.Default.IsReversed;
+        public bool IsReversed
+        {
+            get => _isReversed;
+            set => Set(ref _isReversed, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение линий блоков
@@ -168,16 +177,16 @@ namespace CreateSuperstructureBlocks.ViewModels
         }
         #endregion
 
-        #region Тест проецирование точек на ось
-        public ICommand CreateProjectPointsCommand { get; }
+        #region Создание блоков
+        public ICommand CreateBlocksCommand { get; }
 
-        private void OnCreateProjectPointsCommandExecuted(object parameter)
+        private void OnCreateBlocksCommandExecuted(object parameter)
         {
-            RevitModel.CreateProjectPoints(FamilySymbolName);
+            RevitModel.CreateBlocks(FamilySymbolName, IsReversed);
             SaveSettings();
         }
 
-        private bool CanCreateProjectPointsCommandExecute(object parameter)
+        private bool CanCreateBlocksCommandExecute(object parameter)
         {
             return true;
         }
@@ -207,6 +216,7 @@ namespace CreateSuperstructureBlocks.ViewModels
             Properties.Settings.Default.RoadLineElemIds1 = RoadLineElemIds1;
             Properties.Settings.Default.RoadLineElemIds2 = RoadLineElemIds2;
             Properties.Settings.Default.FamilySymbolIndex = GenericModelFamilySymbols.IndexOf(FamilySymbolName);
+            Properties.Settings.Default.IsReversed = IsReversed;
             Properties.Settings.Default.Save();
         }
 
@@ -280,7 +290,7 @@ namespace CreateSuperstructureBlocks.ViewModels
             #region Команды
             GetBeamAxisBySelectionCommand = new LambdaCommand(OnGetBeamAxisBySelectionCommandExecuted, CanGetBeamAxisBySelectionCommandExecute);
             GetRoadAxisCommand = new LambdaCommand(OnGetRoadAxisCommandExecuted, CanGetRoadAxisCommandExecute);
-            CreateProjectPointsCommand = new LambdaCommand(OnCreateProjectPointsCommandExecuted, CanCreateProjectPointsCommandExecute);
+            CreateBlocksCommand = new LambdaCommand(OnCreateBlocksCommandExecuted, CanCreateBlocksCommandExecute);
             GetRoadLines1Command = new LambdaCommand(OnGetRoadLines1CommandExecuted, CanGetRoadLines1CommandExecute);
             GetRoadLines2Command = new LambdaCommand(OnGetRoadLines2CommandExecuted, CanGetRoadLines2CommandExecute);
             CloseWindowCommand = new LambdaCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);

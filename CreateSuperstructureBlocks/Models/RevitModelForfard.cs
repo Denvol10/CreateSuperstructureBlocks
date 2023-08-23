@@ -169,9 +169,29 @@ namespace CreateSuperstructureBlocks
         #endregion
 
         #region Создание блоков балок
-        public void CreateProjectPoints(FamilySymbolSelector familyAndSymbolName)
+        public void CreateBlocks(FamilySymbolSelector familyAndSymbolName, bool isReversed)
         {
-            var blocks = BeamAxis.Select(a => new SuperstructureBlock(a));
+            //if(isReversed)
+            //{
+            //    var blocks = BeamAxis.Select(a => new SuperstructureBlock(a));
+            //}
+
+            var blocks = new List<SuperstructureBlock>();
+
+            if(isReversed)
+            {
+                foreach (var line in BeamAxis)
+                {
+                    blocks.Add(new SuperstructureBlock(line.CreateReversed() as Line));
+                }
+            }
+            else
+            {
+                foreach(var line in BeamAxis)
+                {
+                    blocks.Add(new SuperstructureBlock(line));
+                }
+            }
 
             var testPoints = new List<XYZ>();
 

@@ -82,5 +82,17 @@ namespace CreateSuperstructureBlocks.Properties {
                 this["FamilySymbolIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsReversed {
+            get {
+                return ((bool)(this["IsReversed"]));
+            }
+            set {
+                this["IsReversed"] = value;
+            }
+        }
     }
 }

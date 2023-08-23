@@ -174,7 +174,7 @@
                               VerticalAlignment="Center"
                               HorizontalAlignment="Left"
                               Margin="10,5,0,0"
-                              IsChecked="{Binding IsRotate}" />
+                              IsChecked="{Binding IsReversed}" />
                     <CheckBox Content="Отзеркалить"
                               VerticalAlignment="Center"
                               HorizontalAlignment="Left"
@@ -194,7 +194,7 @@
                          Margin="0,12,0,5">
                 <Button Content="Создать"
                         Style="{StaticResource SelectButton}"
-                        Command="{Binding CreateProjectPointsCommand}" />
+                        Command="{Binding CreateBlocksCommand}" />
                 <Button Content="Отмена"
                         Style="{StaticResource SelectButton}"
                         Command="{Binding CloseWindowCommand}" />
