@@ -169,13 +169,12 @@ namespace CreateSuperstructureBlocks
         #endregion
 
         #region Создание блоков балок
-        public void CreateBlocks(FamilySymbolSelector familyAndSymbolName, bool isReversed)
+        public void CreateBlocks(FamilySymbolSelector familyAndSymbolName,
+                                 double coverageThickness,
+                                 double plateThickness,
+                                 double blockHeight,
+                                 bool isReversed)
         {
-            //if(isReversed)
-            //{
-            //    var blocks = BeamAxis.Select(a => new SuperstructureBlock(a));
-            //}
-
             var blocks = new List<SuperstructureBlock>();
 
             if(isReversed)
@@ -235,7 +234,10 @@ namespace CreateSuperstructureBlocks
                         endNormalOnRoadVector = endNormalOnRoadVector.Negate();
                     }
 
-                    double distanceBetweenRoadPlaneAndBlock = UnitUtils.ConvertToInternalUnits(2028, UnitTypeId.Millimeters);
+                    double distanceBetweenRoadPlaneAndBlock = UnitUtils.ConvertToInternalUnits((coverageThickness
+                                                                                                + plateThickness
+                                                                                                + blockHeight), UnitTypeId.Millimeters);
+
                     double distanceBetweenPoints = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
 
                     XYZ offsetPlanePoint1 = startPointOnRoad1 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;

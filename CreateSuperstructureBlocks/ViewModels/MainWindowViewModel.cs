@@ -209,7 +209,11 @@ namespace CreateSuperstructureBlocks.ViewModels
 
         private void OnCreateBlocksCommandExecuted(object parameter)
         {
-            RevitModel.CreateBlocks(FamilySymbolName, IsReversed);
+            RevitModel.CreateBlocks(FamilySymbolName,
+                                    CoverageThickness,
+                                    PlateThickness,
+                                    BlockHeight,
+                                    IsReversed);
             SaveSettings();
         }
 
