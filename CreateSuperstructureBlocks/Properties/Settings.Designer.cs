@@ -94,5 +94,41 @@ namespace CreateSuperstructureBlocks.Properties {
                 this["IsReversed"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double CoverageThickness {
+            get {
+                return ((double)(this["CoverageThickness"]));
+            }
+            set {
+                this["CoverageThickness"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double PlateThickness {
+            get {
+                return ((double)(this["PlateThickness"]));
+            }
+            set {
+                this["PlateThickness"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double BlockHeight {
+            get {
+                return ((double)(this["BlockHeight"]));
+            }
+            set {
+                this["BlockHeight"] = value;
+            }
+        }
     }
 }

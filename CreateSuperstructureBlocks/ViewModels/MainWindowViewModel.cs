@@ -98,6 +98,33 @@ namespace CreateSuperstructureBlocks.ViewModels
         private int _familySymbolIndex = Properties.Settings.Default.FamilySymbolIndex;
         #endregion
 
+        #region Толщина покрытия
+        private double _coverageThickness = Properties.Settings.Default.CoverageThickness;
+        public double CoverageThickness
+        {
+            get => _coverageThickness;
+            set => Set(ref _coverageThickness, value);
+        }
+        #endregion
+
+        #region Толщина плиты
+        private double _plateThickness = Properties.Settings.Default.PlateThickness;
+        public double PlateThickness
+        {
+            get => _plateThickness;
+            set => Set(ref _plateThickness, value);
+        }
+        #endregion
+
+        #region Высота блока
+        private double _blockHeight = Properties.Settings.Default.BlockHeight;
+        public double BlockHeight
+        {
+            get => _blockHeight;
+            set => Set(ref _blockHeight, value);
+        }
+        #endregion
+
         #region Развернут ли блок
         private bool _isReversed = Properties.Settings.Default.IsReversed;
         public bool IsReversed
@@ -217,6 +244,9 @@ namespace CreateSuperstructureBlocks.ViewModels
             Properties.Settings.Default.RoadLineElemIds2 = RoadLineElemIds2;
             Properties.Settings.Default.FamilySymbolIndex = GenericModelFamilySymbols.IndexOf(FamilySymbolName);
             Properties.Settings.Default.IsReversed = IsReversed;
+            Properties.Settings.Default.CoverageThickness = CoverageThickness;
+            Properties.Settings.Default.PlateThickness = PlateThickness;
+            Properties.Settings.Default.BlockHeight = BlockHeight;
             Properties.Settings.Default.Save();
         }
 

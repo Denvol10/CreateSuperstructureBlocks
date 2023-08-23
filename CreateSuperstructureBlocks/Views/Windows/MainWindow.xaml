@@ -125,7 +125,8 @@
                     <TextBlock Text="Толщина покрытия, мм"
                                Style="{StaticResource TextAboveButton}"
                                Margin="15,0,0,0" />
-                    <TextBox Height="20"
+                    <TextBox Text="{Binding CoverageThickness, UpdateSourceTrigger=PropertyChanged}"
+                             Height="20"
                              Width="50"
                              HorizontalAlignment="Right"
                              TextAlignment="Center"
@@ -136,7 +137,8 @@
                     <TextBlock Text="Толщина плиты, мм"
                                Style="{StaticResource TextAboveButton}"
                                Margin="15,0,0,0" />
-                    <TextBox Height="20"
+                    <TextBox Text="{Binding PlateThickness, UpdateSourceTrigger=PropertyChanged}"
+                             Height="20"
                              Width="50"
                              HorizontalAlignment="Right"
                              TextAlignment="Center"
@@ -162,7 +164,8 @@
                         <TextBlock Text="Высота блока, мм"
                                    Style="{StaticResource TextAboveButton}"
                                    Margin="5,0,0,0" />
-                        <TextBox Width="50"
+                        <TextBox Text="{Binding BlockHeight, UpdateSourceTrigger=PropertyChanged}"
+                                 Width="50"
                                  Height="20"
                                  HorizontalAlignment="Right"
                                  Margin="0,0,4,0"
