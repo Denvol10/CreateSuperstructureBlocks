@@ -64,6 +64,7 @@
     <Compile Include="Models\PolyCurve.cs" />
     <Compile Include="Models\RevitGeometryUtils.cs" />
     <Compile Include="Models\RevitModelForfard.cs" />
+    <Compile Include="Models\SuperstructureBlock.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -88,6 +89,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="result.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

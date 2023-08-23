@@ -11,6 +11,7 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
 using CreateSuperstructureBlocks.Models;
+using System.IO;
 
 namespace CreateSuperstructureBlocks
 {
@@ -167,35 +168,51 @@ namespace CreateSuperstructureBlocks
         }
         #endregion
 
-        #region Тест проекция точек на ось
+        #region Создание блоков балок
         public void CreateProjectPoints()
         {
-            var points = BeamAxis.Select(l => l.GetEndPoint(0)).ToList();
-            points.AddRange(BeamAxis.Select(l => l.GetEndPoint(1)));
-            var projectPoints = new List<XYZ>();
+            var blocks = BeamAxis.Select(a => new SuperstructureBlock(a));
 
-            foreach(var point in points)
+            var testPoints = new List<XYZ>();
+
+            string resultPath = @"O:\Revit Infrastructure Tools\CreateSuperstructureBlocks\CreateSuperstructureBlocks\result.txt";
+
+            using(StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
             {
-                var projectPoint = RoadAxis.GetProjectPoint(point);
-                if(!(projectPoint is null))
+                foreach (var block in blocks)
                 {
-                    projectPoints.Add(projectPoint);
+                    var startPlane = block.GetStartPlane(RoadAxis);
+                    var endPlane = block.GetEndPlane(RoadAxis);
+
+                    Line startLineOnRoad1 = RevitGeometryUtils.GetIntersectCurve(RoadLines1, startPlane);
+                    Line startLineOnRoad2 = RevitGeometryUtils.GetIntersectCurve(RoadLines2, startPlane);
+
+                    Line endLineOnRoad1 = RevitGeometryUtils.GetIntersectCurve(RoadLines1, endPlane);
+                    Line endLineOnRoad2 = RevitGeometryUtils.GetIntersectCurve(RoadLines2, endPlane);
+
+                    XYZ startPointOnRoad1 = RevitGeometryUtils.LinePlaneIntersection(startLineOnRoad1, startPlane, out _);
+                    XYZ startPointOnRoad2 = RevitGeometryUtils.LinePlaneIntersection(startLineOnRoad2, startPlane, out _);
+
+                    XYZ endPointOnRoad1 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad1, endPlane, out _);
+                    XYZ endPointOnRoad2 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad2, endPlane, out _);
+
+                    testPoints.Add(startPointOnRoad1);
+                    testPoints.Add(startPointOnRoad2);
+                    testPoints.Add(endPointOnRoad1);
+                    testPoints.Add(endPointOnRoad2);
                 }
             }
 
-            using(Transaction trans = new Transaction(Doc, "Created Project Points"))
+            using (Transaction trans = new Transaction(Doc, "Created Blocks"))
             {
                 trans.Start();
-                foreach(XYZ point in projectPoints)
+                foreach (var point in testPoints)
                 {
-                    var referencePoint = Doc.FamilyCreate.NewReferencePoint(point);
-                }
-                foreach (XYZ point in points)
-                {
-                    var referencePoint = Doc.FamilyCreate.NewReferencePoint(point);
+                    var referPoint = Doc.FamilyCreate.NewReferencePoint(point);
                 }
                 trans.Commit();
             }
+
         }
         #endregion
 

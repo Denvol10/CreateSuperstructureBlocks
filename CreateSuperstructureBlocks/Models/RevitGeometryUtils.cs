@@ -40,7 +40,7 @@ namespace CreateSuperstructureBlocks.Models
         public static List<Line> GetRoadLines(UIApplication uiapp, out string elementIds)
         {
             Selection sel = uiapp.ActiveUIDocument.Selection;
-            var selectedOnRoadSurface = sel.PickObjects(ObjectType.Element,new DirectShapeClassFilter() , "Select Road Lines");
+            var selectedOnRoadSurface = sel.PickObjects(ObjectType.Element, new DirectShapeClassFilter(), "Select Road Lines");
             var directShapesRoadSurface = selectedOnRoadSurface.Select(r => uiapp.ActiveUIDocument.Document.GetElement(r))
                                                                .OfType<DirectShape>();
             elementIds = ElementIdToString(directShapesRoadSurface);
@@ -117,6 +117,60 @@ namespace CreateSuperstructureBlocks.Models
             var lines = GetCurvesByDirectShapes(directShapeLines).OfType<Curve>().ToList();
 
             return lines;
+        }
+
+        // Получение линии из списка, которая пересекается с плоскостью
+        public static Line GetIntersectCurve(IEnumerable<Line> lines, Plane plane)
+        {
+            XYZ originPlane = plane.Origin;
+            XYZ directionLine = plane.XVec;
+
+            var lineByPlane = Line.CreateUnbound(originPlane, directionLine);
+
+            foreach (var line in lines)
+            {
+                XYZ startPoint = line.GetEndPoint(0);
+                XYZ finishPoint = line.GetEndPoint(1);
+
+                XYZ startPointOnBase = new XYZ(startPoint.X, startPoint.Y, 0);
+                XYZ finishPointOnBase = new XYZ(finishPoint.X, finishPoint.Y, 0);
+
+                var baseLine = Line.CreateBound(startPointOnBase, finishPointOnBase);
+
+                var result = new IntersectionResultArray();
+                var compResult = lineByPlane.Intersect(baseLine, out result);
+                if (compResult == SetComparisonResult.Overlap)
+                {
+                    return line;
+                }
+            }
+
+            return null;
+        }
+
+         /* Пересечение линии и плоскости
+         * (преобразует линию в вектор, поэтому пересекает любую линию не параллельную плоскости)
+         */
+        public static XYZ LinePlaneIntersection(Line line, Plane plane, out double lineParameter)
+        {
+            XYZ planePoint = plane.Origin;
+            XYZ planeNormal = plane.Normal;
+            XYZ linePoint = line.GetEndPoint(0);
+
+            XYZ lineDirection = (line.GetEndPoint(1) - linePoint).Normalize();
+
+            // Проверка на параллельность линии и плоскости
+            if ((planeNormal.DotProduct(lineDirection)) == 0)
+            {
+                lineParameter = double.NaN;
+                return null;
+            }
+
+            lineParameter = (planeNormal.DotProduct(planePoint)
+              - planeNormal.DotProduct(linePoint))
+                / planeNormal.DotProduct(lineDirection);
+
+            return linePoint + lineParameter * lineDirection;
         }
 
         // Метод получения строки с ElementId
