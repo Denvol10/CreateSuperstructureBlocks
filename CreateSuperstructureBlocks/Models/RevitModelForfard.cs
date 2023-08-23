@@ -211,23 +211,36 @@ namespace CreateSuperstructureBlocks
                         endNormalOnRoadVector = endNormalOnRoadVector.Negate();
                     }
 
-                    double distance = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+                    double distanceBetweenRoadPlaneAndBlock = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
+                    double distanceBetweenPoints = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
 
-                    XYZ offsetPlanePoint1 = startPointOnRoad1 + startNormalOnRoadVector * distance;
-                    XYZ offsetPlanePoint2 = startPointOnRoad2 + startNormalOnRoadVector * distance;
-                    XYZ offsetPlanePoint3 = endPointOnRoad1 + endNormalOnRoadVector * distance;
+                    XYZ offsetPlanePoint1 = startPointOnRoad1 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
+                    XYZ offsetPlanePoint2 = startPointOnRoad2 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
+                    XYZ offsetPlanePoint3 = endPointOnRoad1 + endNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
 
                     Plane offsetPlane = Plane.CreateByThreePoints(offsetPlanePoint1, offsetPlanePoint2, offsetPlanePoint3);
 
                     Line startPointVerticalLine = Line.CreateBound(block.StartAxisPoint, block.StartAxisPoint + XYZ.BasisZ);
 
+                    // Первая точка для адаптивного семейства блока
                     XYZ startOffsetPoint = RevitGeometryUtils.LinePlaneIntersection(startPointVerticalLine, offsetPlane, out _);
 
+                    Line endPointVerticalLine = Line.CreateBound(block.EndAxisPoint, block.EndAxisPoint + XYZ.BasisZ);
+                    XYZ endOffsetPoint = RevitGeometryUtils.LinePlaneIntersection(endPointVerticalLine, offsetPlane, out _);
+                    XYZ vectorAlongBlock = endOffsetPoint - startOffsetPoint;
+
+                    // Вторая точка для адаптивного семейства блока
+                    XYZ secondPoint = startOffsetPoint + vectorAlongBlock.Normalize() * distanceBetweenPoints;
+
+                    XYZ thirdPointVector = vectorAlongBlock.CrossProduct(startNormalOnRoadVector).Normalize();
+
+                    // Третья точка для адаптивного семейства
+                    XYZ thirdPoint = startOffsetPoint + thirdPointVector * distanceBetweenPoints;
+
+
                     testPoints.Add(startOffsetPoint);
-                    testPoints.Add(startPointOnRoad1);
-                    testPoints.Add(startPointOnRoad2);
-                    testPoints.Add(endPointOnRoad1);
-                    testPoints.Add(endPointOnRoad2);
+                    testPoints.Add(secondPoint);
+                    testPoints.Add(thirdPoint);
 
                 }
             }
