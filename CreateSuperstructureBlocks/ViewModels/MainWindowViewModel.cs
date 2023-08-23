@@ -173,7 +173,7 @@ namespace CreateSuperstructureBlocks.ViewModels
 
         private void OnCreateProjectPointsCommandExecuted(object parameter)
         {
-            RevitModel.CreateProjectPoints();
+            RevitModel.CreateProjectPoints(FamilySymbolName);
             SaveSettings();
         }
 

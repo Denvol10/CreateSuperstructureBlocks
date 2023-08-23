@@ -169,11 +169,15 @@ namespace CreateSuperstructureBlocks
         #endregion
 
         #region Создание блоков балок
-        public void CreateProjectPoints()
+        public void CreateProjectPoints(FamilySymbolSelector familyAndSymbolName)
         {
             var blocks = BeamAxis.Select(a => new SuperstructureBlock(a));
 
             var testPoints = new List<XYZ>();
+
+            FamilySymbol fSymbol = GetFamilySymbolByName(familyAndSymbolName);
+
+            var creationDataList = new List<Autodesk.Revit.Creation.FamilyInstanceCreationData>();
 
             string resultPath = @"O:\Revit Infrastructure Tools\CreateSuperstructureBlocks\CreateSuperstructureBlocks\result.txt";
 
@@ -211,7 +215,7 @@ namespace CreateSuperstructureBlocks
                         endNormalOnRoadVector = endNormalOnRoadVector.Negate();
                     }
 
-                    double distanceBetweenRoadPlaneAndBlock = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
+                    double distanceBetweenRoadPlaneAndBlock = UnitUtils.ConvertToInternalUnits(2028, UnitTypeId.Millimeters);
                     double distanceBetweenPoints = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
 
                     XYZ offsetPlanePoint1 = startPointOnRoad1 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
@@ -237,23 +241,48 @@ namespace CreateSuperstructureBlocks
                     // Третья точка для адаптивного семейства
                     XYZ thirdPoint = startOffsetPoint + thirdPointVector * distanceBetweenPoints;
 
+                    var familyInstancePoints = new List<XYZ>() { startOffsetPoint, secondPoint, thirdPoint };
 
-                    testPoints.Add(startOffsetPoint);
-                    testPoints.Add(secondPoint);
-                    testPoints.Add(thirdPoint);
+                    creationDataList.Add(new Autodesk.Revit.Creation.FamilyInstanceCreationData(fSymbol, familyInstancePoints));
+
+                    testPoints.Add(startPointOnRoad1);
+                    testPoints.Add(startPointOnRoad2);
 
                 }
             }
 
-            using (Transaction trans = new Transaction(Doc, "Created Blocks"))
+            using (Transaction trans = new Transaction(Doc, "Create Family Instances"))
             {
                 trans.Start();
+                if (!fSymbol.IsActive)
+                {
+                    fSymbol.Activate();
+                }
+                if (Doc.IsFamilyDocument)
+                {
+                    Doc.FamilyCreate.NewFamilyInstances2(creationDataList);
+                }
+                else
+                {
+                    Doc.Create.NewFamilyInstances2(creationDataList);
+                }
+
                 foreach (var point in testPoints)
                 {
                     var referPoint = Doc.FamilyCreate.NewReferencePoint(point);
                 }
                 trans.Commit();
             }
+
+            //using (Transaction trans = new Transaction(Doc, "Created Blocks"))
+            //{
+            //    trans.Start();
+            //    foreach (var point in testPoints)
+            //    {
+            //        var referPoint = Doc.FamilyCreate.NewReferencePoint(point);
+            //    }
+            //    trans.Commit();
+            //}
 
         }
         #endregion
