@@ -196,10 +196,39 @@ namespace CreateSuperstructureBlocks
                     XYZ endPointOnRoad1 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad1, endPlane, out _);
                     XYZ endPointOnRoad2 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad2, endPlane, out _);
 
+                    XYZ startRoadSurfaceVector = startPointOnRoad1 - startPointOnRoad2;
+                    XYZ endRoadSurfaceVector = endPointOnRoad1 - endPointOnRoad2;
+
+                    XYZ startNormalOnRoadVector = startRoadSurfaceVector.CrossProduct(startPlane.Normal).Normalize();
+                    if(startNormalOnRoadVector.Z > 0)
+                    {
+                        startNormalOnRoadVector = startNormalOnRoadVector.Negate();
+                    }
+
+                    XYZ endNormalOnRoadVector = endRoadSurfaceVector.CrossProduct(endPlane.Normal).Normalize();
+                    if (endNormalOnRoadVector.Z > 0)
+                    {
+                        endNormalOnRoadVector = endNormalOnRoadVector.Negate();
+                    }
+
+                    double distance = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+
+                    XYZ offsetPlanePoint1 = startPointOnRoad1 + startNormalOnRoadVector * distance;
+                    XYZ offsetPlanePoint2 = startPointOnRoad2 + startNormalOnRoadVector * distance;
+                    XYZ offsetPlanePoint3 = endPointOnRoad1 + endNormalOnRoadVector * distance;
+
+                    Plane offsetPlane = Plane.CreateByThreePoints(offsetPlanePoint1, offsetPlanePoint2, offsetPlanePoint3);
+
+                    Line startPointVerticalLine = Line.CreateBound(block.StartAxisPoint, block.StartAxisPoint + XYZ.BasisZ);
+
+                    XYZ startOffsetPoint = RevitGeometryUtils.LinePlaneIntersection(startPointVerticalLine, offsetPlane, out _);
+
+                    testPoints.Add(startOffsetPoint);
                     testPoints.Add(startPointOnRoad1);
                     testPoints.Add(startPointOnRoad2);
                     testPoints.Add(endPointOnRoad1);
                     testPoints.Add(endPointOnRoad2);
+
                 }
             }
 
