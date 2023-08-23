@@ -177,7 +177,7 @@ namespace CreateSuperstructureBlocks
 
             FamilySymbol fSymbol = GetFamilySymbolByName(familyAndSymbolName);
 
-            var creationDataList = new List<Autodesk.Revit.Creation.FamilyInstanceCreationData>();
+            var creationDataList = new List<(Autodesk.Revit.Creation.FamilyInstanceCreationData CreationData, double Length)>();
 
             string resultPath = @"O:\Revit Infrastructure Tools\CreateSuperstructureBlocks\CreateSuperstructureBlocks\result.txt";
 
@@ -242,8 +242,10 @@ namespace CreateSuperstructureBlocks
                     XYZ thirdPoint = startOffsetPoint + thirdPointVector * distanceBetweenPoints;
 
                     var familyInstancePoints = new List<XYZ>() { startOffsetPoint, secondPoint, thirdPoint };
+                    double blockLength = endOffsetPoint.DistanceTo(startOffsetPoint);
 
-                    creationDataList.Add(new Autodesk.Revit.Creation.FamilyInstanceCreationData(fSymbol, familyInstancePoints));
+
+                    creationDataList.Add((new Autodesk.Revit.Creation.FamilyInstanceCreationData(fSymbol, familyInstancePoints), blockLength));
 
                     testPoints.Add(startPointOnRoad1);
                     testPoints.Add(startPointOnRoad2);
@@ -258,13 +260,25 @@ namespace CreateSuperstructureBlocks
                 {
                     fSymbol.Activate();
                 }
+
+                ICollection<ElementId> elementSet = null;
+
                 if (Doc.IsFamilyDocument)
                 {
-                    Doc.FamilyCreate.NewFamilyInstances2(creationDataList);
+                    elementSet = Doc.FamilyCreate.NewFamilyInstances2(creationDataList.Select(c => c.CreationData).ToList());
                 }
                 else
                 {
-                    Doc.Create.NewFamilyInstances2(creationDataList);
+                    elementSet = Doc.Create.NewFamilyInstances2(creationDataList.Select(c => c.CreationData).ToList());
+                }
+
+                for(int i = 0; i < elementSet.Count; i++)
+                {
+                    Element elem = Doc.GetElement(elementSet.ElementAt(i));
+                    double length = creationDataList.Select(c => c.Length).ElementAt(i);
+
+                    Parameter blockLengthParameter = elem.LookupParameter("Длина блока");
+                    blockLengthParameter.Set(length);
                 }
 
                 foreach (var point in testPoints)
