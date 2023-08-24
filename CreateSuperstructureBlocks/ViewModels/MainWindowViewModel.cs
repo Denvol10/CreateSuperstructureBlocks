@@ -134,6 +134,24 @@ namespace CreateSuperstructureBlocks.ViewModels
         }
         #endregion
 
+        #region Отзеркален ли блок
+        private bool _isMirrored = Properties.Settings.Default.IsMirrored;
+        public bool IsMirrored
+        {
+            get => _isMirrored;
+            set => Set(ref _isMirrored, value);
+        }
+        #endregion
+
+        #region Обращен ли блок
+        private bool _isTurned = Properties.Settings.Default.IsTurned;
+        public bool IsTurned
+        {
+            get => _isTurned;
+            set => Set(ref _isTurned, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение линий блоков
@@ -213,7 +231,9 @@ namespace CreateSuperstructureBlocks.ViewModels
                                     CoverageThickness,
                                     PlateThickness,
                                     BlockHeight,
-                                    IsReversed);
+                                    IsReversed,
+                                    IsMirrored,
+                                    IsTurned);
             SaveSettings();
         }
 
@@ -251,6 +271,8 @@ namespace CreateSuperstructureBlocks.ViewModels
             Properties.Settings.Default.CoverageThickness = CoverageThickness;
             Properties.Settings.Default.PlateThickness = PlateThickness;
             Properties.Settings.Default.BlockHeight = BlockHeight;
+            Properties.Settings.Default.IsMirrored = IsMirrored;
+            Properties.Settings.Default.IsTurned = IsTurned;
             Properties.Settings.Default.Save();
         }
 

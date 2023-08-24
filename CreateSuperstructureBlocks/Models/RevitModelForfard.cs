@@ -173,7 +173,9 @@ namespace CreateSuperstructureBlocks
                                  double coverageThickness,
                                  double plateThickness,
                                  double blockHeight,
-                                 bool isReversed)
+                                 bool isReversed,
+                                 bool isMirrored,
+                                 bool isTurned)
         {
             var blocks = new List<SuperstructureBlock>();
 
@@ -259,6 +261,10 @@ namespace CreateSuperstructureBlocks
                     XYZ secondPoint = startOffsetPoint + vectorAlongBlock.Normalize() * distanceBetweenPoints;
 
                     XYZ thirdPointVector = vectorAlongBlock.CrossProduct(startNormalOnRoadVector).Normalize();
+                    if(isMirrored)
+                    {
+                        thirdPointVector = thirdPointVector.Negate();
+                    }
 
                     // Третья точка для адаптивного семейства
                     XYZ thirdPoint = startOffsetPoint + thirdPointVector * distanceBetweenPoints;
@@ -301,6 +307,18 @@ namespace CreateSuperstructureBlocks
 
                     Parameter blockLengthParameter = elem.LookupParameter("Длина блока");
                     blockLengthParameter.Set(length);
+                }
+
+                if(isTurned)
+                {
+                    for (int i = 0; i < elementSet.Count; i++)
+                    {
+                        Element elem = Doc.GetElement(elementSet.ElementAt(i));
+                        double length = creationDataList.Select(c => c.Length).ElementAt(i);
+
+                        Parameter blockLengthParameter = elem.get_Parameter(BuiltInParameter.FLEXIBLE_INSTANCE_FLIP);
+                        blockLengthParameter.Set(1);
+                    }
                 }
 
                 foreach (var point in testPoints)
