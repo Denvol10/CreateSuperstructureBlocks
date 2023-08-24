@@ -198,91 +198,80 @@ namespace CreateSuperstructureBlocks
                 }
             }
 
-            var testPoints = new List<XYZ>();
-
             FamilySymbol fSymbol = GetFamilySymbolByName(familyAndSymbolName);
 
             var creationDataList = new List<(Autodesk.Revit.Creation.FamilyInstanceCreationData CreationData, double Length)>();
 
-            string resultPath = @"O:\Revit Infrastructure Tools\CreateSuperstructureBlocks\CreateSuperstructureBlocks\result.txt";
-
-            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            foreach (var block in blocks)
             {
-                foreach (var block in blocks)
+                var startPlane = block.GetStartPlane(RoadAxis);
+                var endPlane = block.GetEndPlane(RoadAxis);
+
+                Line startLineOnRoad1 = RevitGeometryUtils.GetIntersectCurve(RoadLines1, startPlane);
+                Line startLineOnRoad2 = RevitGeometryUtils.GetIntersectCurve(RoadLines2, startPlane);
+
+                Line endLineOnRoad1 = RevitGeometryUtils.GetIntersectCurve(RoadLines1, endPlane);
+                Line endLineOnRoad2 = RevitGeometryUtils.GetIntersectCurve(RoadLines2, endPlane);
+
+                XYZ startPointOnRoad1 = RevitGeometryUtils.LinePlaneIntersection(startLineOnRoad1, startPlane, out _);
+                XYZ startPointOnRoad2 = RevitGeometryUtils.LinePlaneIntersection(startLineOnRoad2, startPlane, out _);
+
+                XYZ endPointOnRoad1 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad1, endPlane, out _);
+                XYZ endPointOnRoad2 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad2, endPlane, out _);
+
+                XYZ startRoadSurfaceVector = startPointOnRoad1 - startPointOnRoad2;
+                XYZ endRoadSurfaceVector = endPointOnRoad1 - endPointOnRoad2;
+
+                XYZ startNormalOnRoadVector = startRoadSurfaceVector.CrossProduct(startPlane.Normal).Normalize();
+                if (startNormalOnRoadVector.Z > 0)
                 {
-                    var startPlane = block.GetStartPlane(RoadAxis);
-                    var endPlane = block.GetEndPlane(RoadAxis);
-
-                    Line startLineOnRoad1 = RevitGeometryUtils.GetIntersectCurve(RoadLines1, startPlane);
-                    Line startLineOnRoad2 = RevitGeometryUtils.GetIntersectCurve(RoadLines2, startPlane);
-
-                    Line endLineOnRoad1 = RevitGeometryUtils.GetIntersectCurve(RoadLines1, endPlane);
-                    Line endLineOnRoad2 = RevitGeometryUtils.GetIntersectCurve(RoadLines2, endPlane);
-
-                    XYZ startPointOnRoad1 = RevitGeometryUtils.LinePlaneIntersection(startLineOnRoad1, startPlane, out _);
-                    XYZ startPointOnRoad2 = RevitGeometryUtils.LinePlaneIntersection(startLineOnRoad2, startPlane, out _);
-
-                    XYZ endPointOnRoad1 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad1, endPlane, out _);
-                    XYZ endPointOnRoad2 = RevitGeometryUtils.LinePlaneIntersection(endLineOnRoad2, endPlane, out _);
-
-                    XYZ startRoadSurfaceVector = startPointOnRoad1 - startPointOnRoad2;
-                    XYZ endRoadSurfaceVector = endPointOnRoad1 - endPointOnRoad2;
-
-                    XYZ startNormalOnRoadVector = startRoadSurfaceVector.CrossProduct(startPlane.Normal).Normalize();
-                    if (startNormalOnRoadVector.Z > 0)
-                    {
-                        startNormalOnRoadVector = startNormalOnRoadVector.Negate();
-                    }
-
-                    XYZ endNormalOnRoadVector = endRoadSurfaceVector.CrossProduct(endPlane.Normal).Normalize();
-                    if (endNormalOnRoadVector.Z > 0)
-                    {
-                        endNormalOnRoadVector = endNormalOnRoadVector.Negate();
-                    }
-
-                    double distanceBetweenRoadPlaneAndBlock = UnitUtils.ConvertToInternalUnits((coverageThickness
-                                                                                                + plateThickness
-                                                                                                + blockHeight), UnitTypeId.Millimeters);
-
-                    double distanceBetweenPoints = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
-
-                    XYZ offsetPlanePoint1 = startPointOnRoad1 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
-                    XYZ offsetPlanePoint2 = startPointOnRoad2 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
-                    XYZ offsetPlanePoint3 = endPointOnRoad1 + endNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
-
-                    Plane offsetPlane = Plane.CreateByThreePoints(offsetPlanePoint1, offsetPlanePoint2, offsetPlanePoint3);
-
-                    Line startPointVerticalLine = Line.CreateBound(block.StartAxisPoint, block.StartAxisPoint + XYZ.BasisZ);
-
-                    // Первая точка для адаптивного семейства блока
-                    XYZ startOffsetPoint = RevitGeometryUtils.LinePlaneIntersection(startPointVerticalLine, offsetPlane, out _);
-
-                    Line endPointVerticalLine = Line.CreateBound(block.EndAxisPoint, block.EndAxisPoint + XYZ.BasisZ);
-                    XYZ endOffsetPoint = RevitGeometryUtils.LinePlaneIntersection(endPointVerticalLine, offsetPlane, out _);
-                    XYZ vectorAlongBlock = endOffsetPoint - startOffsetPoint;
-
-                    // Вторая точка для адаптивного семейства блока
-                    XYZ secondPoint = startOffsetPoint + vectorAlongBlock.Normalize() * distanceBetweenPoints;
-
-                    XYZ thirdPointVector = vectorAlongBlock.CrossProduct(startNormalOnRoadVector).Normalize();
-                    if (isMirrored)
-                    {
-                        thirdPointVector = thirdPointVector.Negate();
-                    }
-
-                    // Третья точка для адаптивного семейства
-                    XYZ thirdPoint = startOffsetPoint + thirdPointVector * distanceBetweenPoints;
-
-                    var familyInstancePoints = new List<XYZ>() { startOffsetPoint, secondPoint, thirdPoint };
-                    double blockLength = endOffsetPoint.DistanceTo(startOffsetPoint);
-
-
-                    creationDataList.Add((new Autodesk.Revit.Creation.FamilyInstanceCreationData(fSymbol, familyInstancePoints), blockLength));
-
-                    testPoints.Add(startPointOnRoad1);
-                    testPoints.Add(startPointOnRoad2);
-
+                    startNormalOnRoadVector = startNormalOnRoadVector.Negate();
                 }
+
+                XYZ endNormalOnRoadVector = endRoadSurfaceVector.CrossProduct(endPlane.Normal).Normalize();
+                if (endNormalOnRoadVector.Z > 0)
+                {
+                    endNormalOnRoadVector = endNormalOnRoadVector.Negate();
+                }
+
+                double distanceBetweenRoadPlaneAndBlock = UnitUtils.ConvertToInternalUnits((coverageThickness
+                                                                                            + plateThickness
+                                                                                            + blockHeight), UnitTypeId.Millimeters);
+
+                double distanceBetweenPoints = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+
+                XYZ offsetPlanePoint1 = startPointOnRoad1 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
+                XYZ offsetPlanePoint2 = startPointOnRoad2 + startNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
+                XYZ offsetPlanePoint3 = endPointOnRoad1 + endNormalOnRoadVector * distanceBetweenRoadPlaneAndBlock;
+
+                Plane offsetPlane = Plane.CreateByThreePoints(offsetPlanePoint1, offsetPlanePoint2, offsetPlanePoint3);
+
+                Line startPointVerticalLine = Line.CreateBound(block.StartAxisPoint, block.StartAxisPoint + XYZ.BasisZ);
+
+                // Первая точка для адаптивного семейства блока
+                XYZ startOffsetPoint = RevitGeometryUtils.LinePlaneIntersection(startPointVerticalLine, offsetPlane, out _);
+
+                Line endPointVerticalLine = Line.CreateBound(block.EndAxisPoint, block.EndAxisPoint + XYZ.BasisZ);
+                XYZ endOffsetPoint = RevitGeometryUtils.LinePlaneIntersection(endPointVerticalLine, offsetPlane, out _);
+                XYZ vectorAlongBlock = endOffsetPoint - startOffsetPoint;
+
+                // Вторая точка для адаптивного семейства блока
+                XYZ secondPoint = startOffsetPoint + vectorAlongBlock.Normalize() * distanceBetweenPoints;
+
+                XYZ thirdPointVector = vectorAlongBlock.CrossProduct(startNormalOnRoadVector).Normalize();
+                if (isMirrored)
+                {
+                    thirdPointVector = thirdPointVector.Negate();
+                }
+
+                // Третья точка для адаптивного семейства
+                XYZ thirdPoint = startOffsetPoint + thirdPointVector * distanceBetweenPoints;
+
+                var familyInstancePoints = new List<XYZ>() { startOffsetPoint, secondPoint, thirdPoint };
+                double blockLength = endOffsetPoint.DistanceTo(startOffsetPoint);
+
+
+                creationDataList.Add((new Autodesk.Revit.Creation.FamilyInstanceCreationData(fSymbol, familyInstancePoints), blockLength));
             }
 
             using (Transaction trans = new Transaction(Doc, "Create Family Instances"))
@@ -328,6 +317,9 @@ namespace CreateSuperstructureBlocks
                     }
                 }
                 trans.Commit();
+
+                Uidoc.ShowElements(ElementSet.FirstOrDefault());
+                Uidoc.RefreshActiveView();
             }
 
         }
