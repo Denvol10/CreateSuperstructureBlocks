@@ -168,6 +168,10 @@ namespace CreateSuperstructureBlocks
         }
         #endregion
 
+        #region Созданные элементы в модели
+        private ICollection<ElementId> ElementSet { get; set; } = null;
+        #endregion
+
         #region Создание блоков балок
         public void CreateBlocks(FamilySymbolSelector familyAndSymbolName,
                                  double coverageThickness,
@@ -179,7 +183,7 @@ namespace CreateSuperstructureBlocks
         {
             var blocks = new List<SuperstructureBlock>();
 
-            if(isReversed)
+            if (isReversed)
             {
                 foreach (var line in BeamAxis)
                 {
@@ -188,7 +192,7 @@ namespace CreateSuperstructureBlocks
             }
             else
             {
-                foreach(var line in BeamAxis)
+                foreach (var line in BeamAxis)
                 {
                     blocks.Add(new SuperstructureBlock(line));
                 }
@@ -202,7 +206,7 @@ namespace CreateSuperstructureBlocks
 
             string resultPath = @"O:\Revit Infrastructure Tools\CreateSuperstructureBlocks\CreateSuperstructureBlocks\result.txt";
 
-            using(StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
             {
                 foreach (var block in blocks)
                 {
@@ -225,7 +229,7 @@ namespace CreateSuperstructureBlocks
                     XYZ endRoadSurfaceVector = endPointOnRoad1 - endPointOnRoad2;
 
                     XYZ startNormalOnRoadVector = startRoadSurfaceVector.CrossProduct(startPlane.Normal).Normalize();
-                    if(startNormalOnRoadVector.Z > 0)
+                    if (startNormalOnRoadVector.Z > 0)
                     {
                         startNormalOnRoadVector = startNormalOnRoadVector.Negate();
                     }
@@ -261,7 +265,7 @@ namespace CreateSuperstructureBlocks
                     XYZ secondPoint = startOffsetPoint + vectorAlongBlock.Normalize() * distanceBetweenPoints;
 
                     XYZ thirdPointVector = vectorAlongBlock.CrossProduct(startNormalOnRoadVector).Normalize();
-                    if(isMirrored)
+                    if (isMirrored)
                     {
                         thirdPointVector = thirdPointVector.Negate();
                     }
@@ -284,59 +288,47 @@ namespace CreateSuperstructureBlocks
             using (Transaction trans = new Transaction(Doc, "Create Family Instances"))
             {
                 trans.Start();
+                if (!(ElementSet is null))
+                {
+                    Doc.Delete(ElementSet);
+                }
+
                 if (!fSymbol.IsActive)
                 {
                     fSymbol.Activate();
                 }
 
-                ICollection<ElementId> elementSet = null;
-
                 if (Doc.IsFamilyDocument)
                 {
-                    elementSet = Doc.FamilyCreate.NewFamilyInstances2(creationDataList.Select(c => c.CreationData).ToList());
+                    ElementSet = Doc.FamilyCreate.NewFamilyInstances2(creationDataList.Select(c => c.CreationData).ToList());
                 }
                 else
                 {
-                    elementSet = Doc.Create.NewFamilyInstances2(creationDataList.Select(c => c.CreationData).ToList());
+                    ElementSet = Doc.Create.NewFamilyInstances2(creationDataList.Select(c => c.CreationData).ToList());
                 }
 
-                for(int i = 0; i < elementSet.Count; i++)
+                for (int i = 0; i < ElementSet.Count; i++)
                 {
-                    Element elem = Doc.GetElement(elementSet.ElementAt(i));
+                    Element elem = Doc.GetElement(ElementSet.ElementAt(i));
                     double length = creationDataList.Select(c => c.Length).ElementAt(i);
 
                     Parameter blockLengthParameter = elem.LookupParameter("Длина блока");
                     blockLengthParameter.Set(length);
                 }
 
-                if(isTurned)
+                if (isTurned)
                 {
-                    for (int i = 0; i < elementSet.Count; i++)
+                    for (int i = 0; i < ElementSet.Count; i++)
                     {
-                        Element elem = Doc.GetElement(elementSet.ElementAt(i));
+                        Element elem = Doc.GetElement(ElementSet.ElementAt(i));
                         double length = creationDataList.Select(c => c.Length).ElementAt(i);
 
                         Parameter blockLengthParameter = elem.get_Parameter(BuiltInParameter.FLEXIBLE_INSTANCE_FLIP);
                         blockLengthParameter.Set(1);
                     }
                 }
-
-                foreach (var point in testPoints)
-                {
-                    var referPoint = Doc.FamilyCreate.NewReferencePoint(point);
-                }
                 trans.Commit();
             }
-
-            //using (Transaction trans = new Transaction(Doc, "Created Blocks"))
-            //{
-            //    trans.Start();
-            //    foreach (var point in testPoints)
-            //    {
-            //        var referPoint = Doc.FamilyCreate.NewReferencePoint(point);
-            //    }
-            //    trans.Commit();
-            //}
 
         }
         #endregion
